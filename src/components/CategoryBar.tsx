@@ -41,7 +41,7 @@ export default function CategoryBar({
     if (container) {
       container.addEventListener("scroll", updateScrollButtons);
       window.addEventListener("resize", updateScrollButtons);
-      updateScrollButtons(); // ✅ 초기 실행하여 버튼 표시 여부 결정
+      updateScrollButtons();
     }
     return () => {
       if (container)
@@ -50,16 +50,14 @@ export default function CategoryBar({
     };
   }, []);
 
-  // 즉시 이동 (반응 속도 개선)
   const handleScroll = (direction: "left" | "right") => {
     if (categoryContainerRef.current) {
-      const moveAmount = categoryContainerRef.current.clientWidth * 0.8; // 이동 거리
+      const moveAmount = categoryContainerRef.current.clientWidth * 0.8;
       const newScrollLeft =
         direction === "left"
           ? categoryContainerRef.current.scrollLeft - moveAmount
           : categoryContainerRef.current.scrollLeft + moveAmount;
 
-      // 즉시 이동 후 부드러운 효과 적용
       categoryContainerRef.current.scrollTo({
         left: newScrollLeft,
         behavior: "auto",
@@ -70,13 +68,14 @@ export default function CategoryBar({
           left: newScrollLeft,
           behavior: "smooth",
         });
-      }, 10); // 10ms 후 부드러운 효과 적용
+      }, 10);
     }
   };
 
   return (
     <Box
       sx={{
+        position: "relative",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -89,11 +88,18 @@ export default function CategoryBar({
         overflow: "hidden",
       }}
     >
-      {/* 왼쪽 이동 버튼 (왼쪽으로 이동할 수 있을 때만 표시) */}
+      {/* 왼쪽 이동 버튼 */}
       {canScrollLeft && (
         <IconButton
           onClick={() => handleScroll("left")}
-          sx={{ color: "#ffffff", padding: "5px", minWidth: "30px" }}
+          sx={{
+            position: "absolute",
+            left: 0,
+            zIndex: 1,
+            color: "#ffffff",
+            padding: "5px",
+            minWidth: "30px",
+          }}
         >
           <ArrowBackIosNewIcon fontSize="small" />
         </IconButton>
@@ -108,7 +114,7 @@ export default function CategoryBar({
           whiteSpace: "nowrap",
           scrollBehavior: "smooth",
           gap: 1,
-          maxWidth: "85%", // ✅ 카테고리 바 너비 증가
+          maxWidth: "85%",
         }}
       >
         {categories.map((category, index) => (
@@ -134,11 +140,18 @@ export default function CategoryBar({
         ))}
       </Box>
 
-      {/* 오른쪽 이동 버튼 (오른쪽으로 이동할 수 있을 때만 표시) */}
+      {/* 오른쪽 이동 버튼 */}
       {canScrollRight && (
         <IconButton
           onClick={() => handleScroll("right")}
-          sx={{ color: "#ffffff", padding: "5px", minWidth: "30px" }}
+          sx={{
+            position: "absolute",
+            right: 0,
+            zIndex: 1,
+            color: "#ffffff",
+            padding: "5px",
+            minWidth: "30px",
+          }}
         >
           <ArrowForwardIosIcon fontSize="small" />
         </IconButton>
