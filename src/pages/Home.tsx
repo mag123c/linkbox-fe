@@ -1,38 +1,74 @@
 import { Container } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CategoryBar from "../components/CategoryBar";
 import VideoList from "../components/VideoList";
+import { fetchVideosByCategory } from "../utils/apis/bookmarkApi";
+import { fetchCategories } from "../utils/apis/categoryApi";
 
-const initialVideos = [
-  {
-    id: "1",
-    title: "React 강의",
-    category: "개발",
-    thumbnail: "https://via.placeholder.com/150",
-    description: "React 강의 영상입니다.",
-    views: 1000,
-    progress: 50,
-  },
-  {
-    id: "2",
-    title: "예능 하이라이트",
-    category: "예능",
-    thumbnail: "https://via.placeholder.com/150",
-    description: "예능 영상입니다.",
-    views: 5000,
-    progress: 80,
-  },
-];
+export default function Home({
+  categoryUpdated,
+}: {
+  categoryUpdated: boolean;
+}) {
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [videos, setVideos] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-const categories = ["전체", "개발", "예능", "다큐"];
+  // ✅ 카테고리 목록 불러오기 (categoryUpdated가 변경될 때마다 실행됨)
+  useEffect(() => {
+    const loadCategories = async () => {
+      setLoading(true);
+      try {
+        const fetchedCategories = await fetchCategories();
+        setCategories(fetchedCategories);
 
-export default function Home() {
-  const [selectedCategory, setSelectedCategory] = useState("전체");
+        // ✅ 첫 번째 카테고리를 자동 선택
+        if (fetchedCategories.length > 0 && !selectedCategory) {
+          setSelectedCategory(fetchedCategories[0]);
+        }
+      } catch (error) {
+        console.error("카테고리 불러오기 실패:", error);
+      }
+      setLoading(false);
+    };
+
+    loadCategories();
+  }, [categoryUpdated]); // ✅ categoryUpdated가 변경될 때마다 실행됨
+
+  // ✅ 선택된 카테고리에 따라 북마크 데이터 가져오기
+  useEffect(() => {
+    if (!selectedCategory) return;
+
+    const loadVideos = async () => {
+      setLoading(true);
+      try {
+        const fetchedVideos = await fetchVideosByCategory(selectedCategory);
+        setVideos(fetchedVideos);
+      } catch (error) {
+        console.error(
+          `"${selectedCategory}" 카테고리의 북마크 불러오기 오류:`,
+          error
+        );
+      }
+      setLoading(false);
+    };
+
+    loadVideos();
+  }, [selectedCategory]);
 
   return (
     <Container>
-      <CategoryBar categories={categories} setCategory={setSelectedCategory} />
-      <VideoList videos={initialVideos} selectedCategory={selectedCategory} />
+      <CategoryBar
+        categories={categories}
+        setCategory={setSelectedCategory}
+        selectedCategory={selectedCategory}
+      />
+      <VideoList
+        videos={videos}
+        selectedCategory={selectedCategory || ""}
+        loading={loading}
+      />
     </Container>
   );
 }

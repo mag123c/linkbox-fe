@@ -6,24 +6,15 @@ import { useEffect, useRef, useState } from "react";
 export default function CategoryBar({
   categories,
   setCategory,
+  selectedCategory,
 }: {
   categories: string[];
   setCategory: (category: string) => void;
+  selectedCategory: string | null;
 }) {
-  const [selectedCategory, setSelectedCategoryState] = useState<string | null>(
-    null
-  );
   const categoryContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
-
-  // 처음 입장 시 첫 번째 카테고리 자동 선택
-  useEffect(() => {
-    if (categories.length > 0) {
-      setSelectedCategoryState(categories[0]);
-      setCategory(categories[0]);
-    }
-  }, [categories, setCategory]);
 
   // 스크롤 가능 여부 업데이트
   const updateScrollButtons = () => {
@@ -35,7 +26,7 @@ export default function CategoryBar({
     }
   };
 
-  // 스크롤 및 윈도우 리사이즈 감지
+  // 스크롤 및 리사이즈 감지
   useEffect(() => {
     const container = categoryContainerRef.current;
     if (container) {
@@ -60,15 +51,8 @@ export default function CategoryBar({
 
       categoryContainerRef.current.scrollTo({
         left: newScrollLeft,
-        behavior: "auto",
+        behavior: "smooth",
       });
-
-      setTimeout(() => {
-        categoryContainerRef.current?.scrollTo({
-          left: newScrollLeft,
-          behavior: "smooth",
-        });
-      }, 10);
     }
   };
 
@@ -88,7 +72,6 @@ export default function CategoryBar({
         overflow: "hidden",
       }}
     >
-      {/* 왼쪽 이동 버튼 */}
       {canScrollLeft && (
         <IconButton
           onClick={() => handleScroll("left")}
@@ -98,14 +81,12 @@ export default function CategoryBar({
             zIndex: 1,
             color: "#ffffff",
             padding: "5px",
-            minWidth: "30px",
           }}
         >
           <ArrowBackIosNewIcon fontSize="small" />
         </IconButton>
       )}
 
-      {/* 카테고리 버튼 리스트 */}
       <Box
         ref={categoryContainerRef}
         sx={{
@@ -122,12 +103,13 @@ export default function CategoryBar({
             key={index}
             variant="contained"
             onClick={() => {
-              setSelectedCategoryState(category);
-              setCategory(category);
+              if (category !== selectedCategory) {
+                setCategory(category);
+              }
             }}
             sx={{
-              bgcolor: "#303030",
-              color: "#E0E0E0",
+              bgcolor: selectedCategory === category ? "#ffffff" : "#303030",
+              color: selectedCategory === category ? "#000000" : "#E0E0E0",
               borderRadius: "20px",
               padding: "5px 15px",
               minWidth: "70px",
@@ -140,7 +122,6 @@ export default function CategoryBar({
         ))}
       </Box>
 
-      {/* 오른쪽 이동 버튼 */}
       {canScrollRight && (
         <IconButton
           onClick={() => handleScroll("right")}
@@ -150,7 +131,6 @@ export default function CategoryBar({
             zIndex: 1,
             color: "#ffffff",
             padding: "5px",
-            minWidth: "30px",
           }}
         >
           <ArrowForwardIosIcon fontSize="small" />

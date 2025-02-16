@@ -1,63 +1,62 @@
-import { Container } from "@mui/material";
+import { CssBaseline, GlobalStyles } from "@mui/material";
 import { useState } from "react";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import AppNavBar from "./components/AppBar";
-import CategoryBar from "./components/CategoryBar";
-import VideoList from "./components/VideoList";
+import Home from "./pages/Home";
 
-// 초기 데이터 (예제)
-const initialVideos = [
-  {
-    id: "1",
-    title: "React 강의",
-    category: "개발",
-    thumbnail: "https://via.placeholder.com/150",
-    description: "React 강의 영상입니다.",
-    views: 1000,
-    progress: 50,
-  },
-  {
-    id: "2",
-    title: "예능 하이라이트",
-    category: "예능",
-    thumbnail: "https://via.placeholder.com/150",
-    description: "예능 영상입니다.",
-    views: 5000,
-    progress: 80,
-  },
-  {
-    id: "3",
-    title: "자연 다큐",
-    category: "다큐",
-    thumbnail: "https://via.placeholder.com/150",
-    description: "자연을 담은 다큐멘터리.",
-    views: 3000,
-    progress: 30,
-  },
-];
-
-const categories = [
-  "개발",
-  "예능",
-  "다큐",
-  "테스트",
-  "테스트2",
-  "테스트3",
-  "테스트4",
-];
+const globalStyles = (
+  <GlobalStyles
+    styles={{
+      body: {
+        margin: 0,
+        padding: 0,
+        width: "100%",
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        backgroundColor: "#121212",
+        color: "#ffffff",
+        fontFamily: "'Noto Sans KR', sans-serif",
+      },
+      "#root": {
+        width: "100%",
+        maxWidth: "500px",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        backgroundColor: "#121212",
+      },
+      "*": {
+        boxSizing: "border-box",
+      },
+    }}
+  />
+);
 
 function App() {
-  const [selectedCategory, setSelectedCategory] = useState("전체");
+  const [categoryUpdated, setCategoryUpdated] = useState(false);
+
+  // ✅ 카테고리 추가 후 업데이트 상태 변경
+  const handleCategoryAdded = () => {
+    setCategoryUpdated((prev) => !prev); // 상태 변경을 통해 강제 리렌더링
+  };
 
   return (
     <>
-      <AppNavBar />
-      <Container>
-        <CategoryBar
-          categories={categories}
-          setCategory={setSelectedCategory}
-        />
-        <VideoList videos={[]} selectedCategory={selectedCategory} />
-      </Container>
+      {globalStyles}
+      <CssBaseline />
+      <Router>
+        <AppNavBar onCategoryAdded={handleCategoryAdded} />{" "}
+        {/* ✅ AppNavBar에 props 추가 */}
+        <Routes>
+          <Route
+            path="/"
+            element={<Home categoryUpdated={categoryUpdated} />}
+          />{" "}
+          {/* ✅ Home으로 전달 */}
+        </Routes>
+      </Router>
     </>
   );
 }
