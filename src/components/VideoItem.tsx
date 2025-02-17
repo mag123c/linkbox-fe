@@ -1,6 +1,13 @@
 import { Card, CardContent, CardMedia, Typography, Box } from '@mui/material';
 
-export default function VideoItem({ video }: { video: any }) {
+interface VideoItemProps {
+    title: string;
+    thumbnailUrl: string;
+    customComment: string;
+    createdAt: string;
+}
+
+export default function VideoItem({ video }: { video: VideoItemProps }) {
     return (
         <Card
             sx={{
