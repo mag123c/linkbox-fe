@@ -1,15 +1,7 @@
 import { Box, Skeleton, Typography } from '@mui/material';
 import VideoItem from './VideoItem';
 
-export default function VideoList({
-    videos,
-    selectedCategory,
-    loading,
-}: {
-    videos: any[];
-    selectedCategory: string;
-    loading: boolean;
-}) {
+export default function VideoList({ videos, loading }: { videos: any[]; selectedCategory: string; loading: boolean }) {
     return (
         <Box sx={{ mt: 2 }}>
             {loading ? (

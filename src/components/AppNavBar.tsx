@@ -9,13 +9,11 @@ import AddVideoForm from './AddVideoForm';
 export default function AppNavBar({
     categories,
     selectedCategory,
-    setSelectedCategory,
     onCategoryAdded,
     onVideoAdded,
 }: {
     categories: string[];
     selectedCategory: string;
-    setSelectedCategory: (category: string) => void;
     onCategoryAdded: () => void;
     onVideoAdded: () => void;
 }) {

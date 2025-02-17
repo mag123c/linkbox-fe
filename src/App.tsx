@@ -1,7 +1,7 @@
 import { CssBaseline, GlobalStyles } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import AppNavBar from './components/AppBar';
+import AppNavBar from './components/AppNavBar';
 import Home from './pages/Home';
 import { fetchCategories } from './utils/apis/categoryApi';
 
@@ -72,7 +72,6 @@ function App() {
                 <AppNavBar
                     categories={categories}
                     selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
                     onCategoryAdded={handleCategoryAdded}
                     onVideoAdded={handleVideoAdded}
                 />
