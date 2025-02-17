@@ -1,64 +1,97 @@
-import { CssBaseline, GlobalStyles } from "@mui/material";
-import { useState } from "react";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import AppNavBar from "./components/AppBar";
-import Home from "./pages/Home";
+import { CssBaseline, GlobalStyles } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import AppNavBar from './components/AppBar';
+import Home from './pages/Home';
+import { fetchCategories } from './utils/apis/categoryApi';
 
 const globalStyles = (
-  <GlobalStyles
-    styles={{
-      body: {
-        margin: 0,
-        padding: 0,
-        width: "100%",
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        backgroundColor: "#121212",
-        color: "#ffffff",
-        fontFamily: "'Noto Sans KR', sans-serif",
-      },
-      "#root": {
-        width: "100%",
-        maxWidth: "500px",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        backgroundColor: "#121212",
-      },
-      "*": {
-        boxSizing: "border-box",
-      },
-    }}
-  />
+    <GlobalStyles
+        styles={{
+            body: {
+                margin: 0,
+                padding: 0,
+                width: '100%',
+                minHeight: '100vh',
+                display: 'flex',
+                justifyContent: 'center',
+                backgroundColor: '#121212',
+                color: '#ffffff',
+                fontFamily: "'Noto Sans KR', sans-serif",
+            },
+            '#root': {
+                width: '100%',
+                maxWidth: '500px',
+                minHeight: '100vh',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                backgroundColor: '#121212',
+            },
+            '*': {
+                boxSizing: 'border-box',
+            },
+        }}
+    />
 );
 
 function App() {
-  const [categoryUpdated, setCategoryUpdated] = useState(false);
+    const [categories, setCategories] = useState<string[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<string>('');
+    const [categoryUpdated, setCategoryUpdated] = useState(false);
+    const [videoUpdated, setVideoUpdated] = useState(false);
 
-  // ✅ 카테고리 추가 후 업데이트 상태 변경
-  const handleCategoryAdded = () => {
-    setCategoryUpdated((prev) => !prev); // 상태 변경을 통해 강제 리렌더링
-  };
+    useEffect(() => {
+        const loadCategories = async () => {
+            try {
+                const fetchedCategories = await fetchCategories();
+                setCategories(fetchedCategories);
+                if (fetchedCategories.length > 0) {
+                    setSelectedCategory(fetchedCategories[0]);
+                }
+            } catch (error) {
+                console.error('카테고리 불러오기 실패:', error);
+            }
+        };
+        loadCategories();
+    }, [categoryUpdated]);
 
-  return (
-    <>
-      {globalStyles}
-      <CssBaseline />
-      <Router>
-        <AppNavBar onCategoryAdded={handleCategoryAdded} />{" "}
-        {/* ✅ AppNavBar에 props 추가 */}
-        <Routes>
-          <Route
-            path="/"
-            element={<Home categoryUpdated={categoryUpdated} />}
-          />{" "}
-          {/* ✅ Home으로 전달 */}
-        </Routes>
-      </Router>
-    </>
-  );
+    const handleCategoryAdded = () => {
+        setCategoryUpdated((prev) => !prev);
+    };
+
+    const handleVideoAdded = () => {
+        setVideoUpdated((prev) => !prev);
+    };
+
+    return (
+        <>
+            {globalStyles}
+            <CssBaseline />
+            <Router>
+                <AppNavBar
+                    categories={categories}
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
+                    onCategoryAdded={handleCategoryAdded}
+                    onVideoAdded={handleVideoAdded}
+                />
+                <Routes>
+                    <Route
+                        path="/"
+                        element={
+                            <Home
+                                categories={categories}
+                                selectedCategory={selectedCategory}
+                                setSelectedCategory={setSelectedCategory}
+                                videoUpdated={videoUpdated}
+                            />
+                        }
+                    />
+                </Routes>
+            </Router>
+        </>
+    );
 }
 
 export default App;
