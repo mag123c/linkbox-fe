@@ -3,12 +3,17 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Box, Button, IconButton } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
+export interface Category {
+  id: number;
+  name: string;
+}
+
 export default function CategoryBar({
   categories,
   setCategory,
   selectedCategory,
 }: {
-  categories: string[];
+  categories: Category[];
   setCategory: (category: string) => void;
   selectedCategory: string | null;
 }) {
@@ -103,21 +108,24 @@ export default function CategoryBar({
             key={index}
             variant="contained"
             onClick={() => {
-              if (category !== selectedCategory) {
-                setCategory(category);
+              if (category.name !== selectedCategory) {
+                setCategory(category.name);
               }
             }}
             sx={{
-              bgcolor: selectedCategory === category ? "#ffffff" : "#303030",
-              color: selectedCategory === category ? "#000000" : "#E0E0E0",
+              bgcolor:
+                selectedCategory === category.name ? "#ffffff" : "#303030",
+              color: selectedCategory === category.name ? "#000000" : "#E0E0E0",
               borderRadius: "20px",
               padding: "5px 15px",
               minWidth: "70px",
               border:
-                selectedCategory === category ? "2px solid #ffffff" : "none",
+                selectedCategory === category.name
+                  ? "2px solid #ffffff"
+                  : "none",
             }}
           >
-            {category}
+            {category.name}
           </Button>
         ))}
       </Box>
