@@ -47,6 +47,7 @@ export const fetchUser = async (): Promise<User | null> => {
     const user = response.data;
     return user;
   } catch (error) {
-    throw error;
+    console.error("유저 정보 불러오기 실패:", error);
+    return null;
   }
 };
