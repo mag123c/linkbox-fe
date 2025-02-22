@@ -1,10 +1,8 @@
 import { CssBaseline, GlobalStyles } from "@mui/material";
-import { useEffect, useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import CategoriesPage from "./pages/CategoriesPage";
 import CategoryDetailPage from "./pages/CategoryDetailPage";
-import { fetchCategories } from "./services/categoryService";
-import { Category } from "./types/category";
+import LoginPage from "./pages/LoginPage";
 
 const globalStyles = (
   <GlobalStyles
@@ -37,24 +35,6 @@ const globalStyles = (
 );
 
 function App() {
-  const [_categories, setCategories] = useState<Category[]>([]);
-  const [_selectedCategory, setSelectedCategory] = useState<string>("");
-
-  useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        const fetchedCategories = await fetchCategories();
-        setCategories(fetchedCategories);
-        if (fetchedCategories.length > 0) {
-          setSelectedCategory(fetchedCategories[0].name);
-        }
-      } catch (error) {
-        console.error("카테고리 불러오기 실패:", error);
-      }
-    };
-    loadCategories();
-  }, []);
-
   return (
     <>
       {globalStyles}
@@ -66,6 +46,7 @@ function App() {
             path="/categories/:categoryId"
             element={<CategoryDetailPage />}
           />
+          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </Router>
     </>
