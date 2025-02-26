@@ -1,5 +1,15 @@
 import { useState } from 'react';
-import { Box, Button, TextField, Typography, IconButton, Dialog, DialogTitle, DialogContent } from '@mui/material';
+import {
+    Box,
+    Button,
+    TextField,
+    Typography,
+    IconButton,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    CircularProgress,
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CategoryFolderSlider from '../categories/CategoryFolderSlider';
 import AddCategoryForm from './AddCategoryForm';
@@ -9,11 +19,11 @@ interface UploadFormProps {
     categories: Category[];
     selectedCategory: number | null;
     onCategorySelect: (categoryId: number) => void;
-    onSubmit: (videoUrl: string, videoComment: string, categoryId: number) => void;
+    onSubmit: (videoUrl: string, videoComment: string, categoryId: number) => Promise<void>; // 비동기 함수
     onAddCategory: () => void;
 }
 
-export default function AddVideoForm({
+export default function AddLinkForm({
     categories,
     selectedCategory,
     onCategorySelect,
@@ -23,6 +33,21 @@ export default function AddVideoForm({
     const [videoUrl, setVideoUrl] = useState('');
     const [videoComment, setVideoComment] = useState('');
     const [openCategoryModal, setOpenCategoryModal] = useState(false);
+    const [loading, setLoading] = useState(false); // ✅ 로딩 상태 추가
+
+    const handleSubmit = async () => {
+        if (loading) return; // ✅ 로딩 중이면 중복 요청 방지
+        if (!videoUrl.trim() || !selectedCategory) return;
+
+        setLoading(true); // ✅ 로딩 시작
+        try {
+            await onSubmit(videoUrl, videoComment, selectedCategory);
+            setVideoUrl(''); // 입력 필드 초기화
+            setVideoComment('');
+        } finally {
+            setLoading(false); // ✅ 로딩 종료
+        }
+    };
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: 500, padding: 2 }}>
@@ -91,20 +116,27 @@ export default function AddVideoForm({
 
             {/* 등록 버튼 */}
             <Button
-                onClick={() => onSubmit(videoUrl, videoComment, selectedCategory!)}
+                onClick={handleSubmit}
                 fullWidth
+                disabled={loading} // ✅ 로딩 중 버튼 비활성화
                 sx={{
-                    backgroundColor: '#A88FFF',
+                    backgroundColor: loading ? '#AAA' : '#A88FFF', // ✅ 로딩 중 색상 변경
                     color: '#FFFFFF',
-                    borderRadius: '16px', // 버튼 테두리 둥글게
+                    borderRadius: '16px',
                     padding: '16px',
-                    fontSize: '16px', // 폰트 크기 키움
+                    fontSize: '16px',
                     textTransform: 'none',
                     mt: 3,
-                    '&:hover': { backgroundColor: '#9776FF' },
+                    '&:hover': { backgroundColor: loading ? '#AAA' : '#9776FF' },
                 }}
             >
-                등록 완료
+                {loading ? (
+                    <>
+                        <CircularProgress size={20} sx={{ color: '#FFF', mr: 1 }} /> 등록 중...
+                    </>
+                ) : (
+                    '등록 완료'
+                )}
             </Button>
 
             {/* 카테고리 추가 모달 */}

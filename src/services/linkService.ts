@@ -22,3 +22,13 @@ export const addLinks = async (metadata: { url: string; memo: string }, category
         throw error;
     }
 };
+
+// ✅ 링크 삭제 API
+export const deleteLink = async (linkId: number): Promise<void> => {
+    await axiosClient.delete(`/links/${linkId}`);
+};
+
+// ✅ 링크 수정 API (메모 수정)
+export const updateLink = async (linkId: number, newComment: string): Promise<void> => {
+    await axiosClient.put(`/links/${linkId}`, { memo: newComment });
+};
