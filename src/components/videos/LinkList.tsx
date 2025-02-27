@@ -31,7 +31,7 @@ export default function LinkList({ videos: initialVideos, loading }: { videos: V
                     />
                 ))
             ) : videos.length > 0 ? (
-                videos.map((video, index) => (
+                videos.map((video, _index) => (
                     <LinkItem
                         key={video.id}
                         video={video}
