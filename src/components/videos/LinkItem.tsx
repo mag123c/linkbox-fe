@@ -1,5 +1,5 @@
 import { Box, Card, CardContent, CardMedia, IconButton, Modal, TextField, Typography, Button } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from 'react';
 import { deleteLink, updateLink } from '../../services/linkService';
 
@@ -73,18 +73,15 @@ export default function LinkItem({
                         position: 'absolute',
                         top: 5,
                         right: 5,
-                        backgroundColor: '#A88FFF',
                         color: 'white',
-                        '&:hover': { backgroundColor: 'rgba(255,0,0,1)' },
                         opacity: 200,
-                        width: 20,
-                        height: 20,
                         padding: 0,
                         pointerEvents: 'auto',
+                        '&:hover': { color: '#FF1C1C' },
                         zIndex: 10,
                     }}
                 >
-                    <CloseIcon fontSize="small" />
+                    <DeleteIcon fontSize="small" />
                 </IconButton>
 
                 {/* 썸네일 - 클릭 시 URL 이동 */}

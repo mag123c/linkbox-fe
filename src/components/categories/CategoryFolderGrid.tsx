@@ -1,14 +1,16 @@
-import { Box, Typography } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 import FolderIcon from '@mui/icons-material/Folder';
 import { Category } from '../../types/category';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { PASTEL_COLORS } from '../../utils/pastelColors';
 import { useNavigate } from 'react-router-dom';
 
 interface CategoryFolderGridProps {
     categories: Category[];
-    isSelectable?: boolean; // ✅ 선택 모드 (UploadForm에서 사용)
+    isSelectable?: boolean;
     selectedCategory?: number | null;
     setSelectedCategory?: (categoryId: number) => void;
+    onDeleteCategory?: (categoryId: number) => void;
 }
 
 export default function CategoryFolderGrid({
@@ -16,6 +18,7 @@ export default function CategoryFolderGrid({
     isSelectable = false,
     selectedCategory,
     setSelectedCategory,
+    onDeleteCategory,
 }: CategoryFolderGridProps) {
     const navigate = useNavigate();
 
@@ -56,10 +59,7 @@ export default function CategoryFolderGrid({
                         cursor: 'pointer',
                         transition: 'all 0.3s ease-in-out',
                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-                        '&:hover': {
-                            opacity: 0.5,
-                            boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.15)',
-                        },
+                        position: 'relative',
                     }}
                 >
                     <FolderIcon
@@ -69,6 +69,26 @@ export default function CategoryFolderGrid({
                         }}
                     />
                     <Typography sx={{ fontWeight: 'bold', color: '#000', mt: 1 }}>{category.name}</Typography>
+                    {/* 삭제 버튼 */}
+                    {onDeleteCategory && (
+                        <IconButton
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                onDeleteCategory(category.id);
+                            }}
+                            sx={{
+                                position: 'absolute',
+                                top: 1,
+                                right: 5,
+                                color: '#A0A0A0',
+                                zIndex: 100,
+                                pointerEvents: 'auto',
+                                '&:hover': { color: '#DB4455' },
+                            }}
+                        >
+                            <DeleteIcon fontSize="small" />
+                        </IconButton>
+                    )}
                 </Box>
             ))}
         </Box>
