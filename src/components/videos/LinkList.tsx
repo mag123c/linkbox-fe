@@ -56,8 +56,10 @@ export default function LinkList({
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              width: isSmallScreen ? "90%" : "80%",
-              maxWidth: isSmallScreen ? "100%" : "800px",
+              width: isSmallScreen ? "90vw" : "80vw",
+              maxWidth: isSmallScreen
+                ? "90vw"
+                : `calc(100% - ${windowWidth / 20}%)`,
               minWidth: "320px",
               overflow: "hidden",
               margin: "0 auto",
