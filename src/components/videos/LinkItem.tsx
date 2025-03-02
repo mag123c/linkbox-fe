@@ -107,29 +107,41 @@ export default function LinkItem({
           />
         </Box>
 
-        <Box sx={{ flex: 1 }} onClick={() => setOpenModal(true)}>
+        <Box
+          sx={{
+            flex: 1,
+            minWidth: 0, // 이 부분이 중요합니다 - flexbox 아이템이 최소 너비 이하로 축소되게 합니다
+            overflow: "hidden", // 컨텐츠가 넘칠 때 숨기기
+          }}
+          onClick={() => setOpenModal(true)}
+        >
           <CardContent
             sx={{
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-              position: "relative",
-              minWidth: 0,
               padding: "10px 15px",
               cursor: "pointer",
+              overflow: "hidden", // 컨텐츠가 넘칠 때 숨기기
+              width: "100%", // 너비 설정
+              height: "100%", // 높이 설정
+              "&:last-child": { paddingBottom: "10px" }, // MUI의 기본 스타일 오버라이드
             }}
           >
             <Typography
               variant="subtitle2"
               sx={{
                 color: "#ffffff",
+                width: "100%",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
-                maxWidth: "80%",
                 fontSize: "14px",
                 fontWeight: "bold",
+                lineHeight: 1.2,
+                marginBottom: "4px",
               }}
+              title={video.title} // 툴팁으로 전체 제목 보이기
             >
               {video.title}
             </Typography>
@@ -137,12 +149,14 @@ export default function LinkItem({
               variant="caption"
               sx={{
                 color: "#BBBBBB",
+                width: "100%",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
-                maxWidth: "80%",
                 fontSize: "12px",
+                lineHeight: 1.2,
               }}
+              title={video.customComment} // 툴팁으로 전체 코멘트 보이기
             >
               {video.customComment}
             </Typography>
@@ -178,6 +192,7 @@ export default function LinkItem({
             sx={{
               input: { color: "#FFFFFF" },
               "& .MuiOutlinedInput-root": {
+                color: "#FFFFFF", // 텍스트 필드의 텍스트 색상 추가
                 borderRadius: "12px",
                 backgroundColor: "rgba(255, 255, 255, 0.1)",
                 borderColor: "#FFF",
