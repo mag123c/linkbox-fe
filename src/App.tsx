@@ -47,6 +47,7 @@ function App() {
             element={<CategoryDetailPage />}
           />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/auth/callback" element={<LoginPage />} />
         </Routes>
       </Router>
     </>

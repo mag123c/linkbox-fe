@@ -1,5 +1,5 @@
-import { Box, Card, CardContent, CardMedia, IconButton, Modal, TextField, Typography, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { Box, Button, Card, CardContent, CardMedia, IconButton, Modal, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { deleteLink, updateLink } from '../../services/linkService';
 
@@ -27,7 +27,6 @@ export default function LinkItem({
     const [updatedComment, setUpdatedComment] = useState(video.customComment);
     const [loading, setLoading] = useState(false);
 
-    // 링크 삭제 핸들러
     const handleDelete = async () => {
         try {
             await deleteLink(video.id);
@@ -37,7 +36,6 @@ export default function LinkItem({
         }
     };
 
-    // 링크 업데이트 핸들러
     const handleUpdate = async () => {
         if (!updatedComment.trim()) return;
         setLoading(true);
@@ -62,10 +60,8 @@ export default function LinkItem({
                     position: 'relative',
                 }}
             >
-                {/* 삭제 버튼 */}
                 <IconButton
                     onClick={(event) => {
-                        console.log('TEST');
                         event.stopPropagation();
                         handleDelete();
                     }}
@@ -76,18 +72,15 @@ export default function LinkItem({
                         backgroundColor: '#A88FFF',
                         color: 'white',
                         '&:hover': { backgroundColor: 'rgba(255,0,0,1)' },
-                        opacity: 200,
                         width: 20,
                         height: 20,
                         padding: 0,
-                        pointerEvents: 'auto',
                         zIndex: 10,
                     }}
                 >
                     <CloseIcon fontSize="small" />
                 </IconButton>
 
-                {/* 썸네일 - 클릭 시 URL 이동 */}
                 <Box
                     sx={{ width: '80px', height: '80px', flexShrink: 0, cursor: 'pointer' }}
                     onClick={() => (window.location.href = video.url)}
@@ -100,7 +93,6 @@ export default function LinkItem({
                     />
                 </Box>
 
-                {/* 텍스트 컨텐츠 - 클릭 시 모달 열림 */}
                 <Box sx={{ flex: 1 }} onClick={() => setOpenModal(true)}>
                     <CardContent
                         sx={{
@@ -120,6 +112,7 @@ export default function LinkItem({
                                 whiteSpace: 'nowrap',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
+                                maxWidth: '80%',
                                 fontSize: '14px',
                                 fontWeight: 'bold',
                             }}
@@ -133,33 +126,16 @@ export default function LinkItem({
                                 whiteSpace: 'nowrap',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
+                                maxWidth: '80%',
                                 fontSize: '12px',
                             }}
                         >
                             {video.customComment}
                         </Typography>
                     </CardContent>
-                    <Typography
-                        variant="caption"
-                        sx={{
-                            color: '#BBBBBB',
-                            alignSelf: 'flex-end',
-                            position: 'absolute',
-                            bottom: 5,
-                            right: 10,
-                            fontSize: '10px',
-                        }}
-                    >
-                        {new Date(video.createdAt).toLocaleDateString('ko-KR', {
-                            year: '2-digit',
-                            month: '2-digit',
-                            day: '2-digit',
-                        })}
-                    </Typography>
                 </Box>
             </Card>
 
-            {/* 메모 수정 모달 */}
             <Modal open={openModal} onClose={() => setOpenModal(false)}>
                 <Box
                     sx={{
@@ -189,6 +165,7 @@ export default function LinkItem({
                             input: { color: '#FFFFFF' },
                             '& .MuiOutlinedInput-root': {
                                 borderRadius: '12px',
+                                backgroundColor: 'rgba(255, 255, 255, 0.1)',
                                 borderColor: '#FFF',
                                 '&:hover fieldset': { borderColor: '#AAA' },
                                 '&.Mui-focused fieldset': { borderColor: '#777' },
